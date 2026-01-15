@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen text-zinc-200" style="background: linear-gradient(135deg, #0B0F14 0%, #1a1625 100%);">
+    <!-- Background 3D -->
+    <ThreeBackground />
+
     <!-- Header avec retour -->
-    <div class="bg-zinc-900 border-b border-zinc-700 px-6 py-4">
+    <div class="bg-zinc-900 border-b border-zinc-700 px-6 py-4 relative z-10">
       <div class="max-w-6xl mx-auto">
         <router-link 
           :to="profile ? `/dashboard/${profile}` : '/'"
@@ -15,7 +18,7 @@
       </div>
     </div>
 
-    <div class="max-w-6xl mx-auto px-6 py-16 relative">
+    <div class="max-w-6xl mx-auto px-6 py-16 relative z-10">
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 hero-gradient pointer-events-none"></div>
       
       <div class="relative z-10">
@@ -34,9 +37,15 @@
           </p>
         </div>
 
-        <!-- Grille de projets -->
-        <div v-if="projects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ProjectCard v-for="project in projects" :key="project.slug" :project="project" />
+        <!-- Grille de projets avec infinite scroll -->
+        <div v-if="displayedProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ProjectCard 
+            v-for="(project, index) in displayedProjects" 
+            :key="project.slug" 
+            :project="project"
+            :style="{ animationDelay: `${(index % 6) * 0.1}s` }"
+            class="project-card-enter"
+          />
         </div>
 
         <!-- Placeholder si pas de projets -->
@@ -44,19 +53,32 @@
           <ProjectsPlaceholder />
         </div>
 
+        <!-- Observer target pour infinite scroll -->
+        <div v-if="hasMore" ref="observerTarget" class="py-12 flex justify-center">
+          <div v-if="isLoading" class="flex flex-col items-center gap-4">
+            <div class="w-12 h-12 border-4 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
+            <p class="text-zinc-400 text-sm">Chargement des projets...</p>
+          </div>
+        </div>
+
+        <!-- Message de fin -->
+        <div v-else-if="displayedProjects.length > 0" class="text-center py-12">
+          <p class="text-zinc-500 text-sm">Tous les projets ont été chargés</p>
+        </div>
+
         <!-- Stats rapides -->
         <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="p-6 bg-zinc-900 border border-zinc-700 text-center">
+          <div class="p-6 bg-zinc-900 border border-zinc-700 text-center hover:border-cyan-400/30 transition-all duration-300">
             <div class="text-4xl font-bold text-cyan-400 mb-2">{{ projects.length }}</div>
             <div class="text-zinc-400">Projets</div>
           </div>
-          <div class="p-6 bg-zinc-900 border border-zinc-700 text-center">
+          <div class="p-6 bg-zinc-900 border border-zinc-700 text-center hover:border-purple-400/30 transition-all duration-300">
             <div class="text-4xl font-bold text-purple-400 mb-2">{{ realTechnologies.length }}</div>
             <div class="text-zinc-400">Technologies</div>
           </div>
         </div>
 
-        <!-- Technologies réelles uniquement -->
+        <!-- Techno -->
         <div class="mt-12 p-8 bg-zinc-900 border border-zinc-700">
           <h2 class="text-2xl font-display font-light mb-6 text-zinc-200">Technologies utilisées</h2>
           <div class="flex flex-wrap gap-3">
@@ -77,15 +99,48 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useProfile } from '../composables/useProfile'
+import { useInfiniteScroll } from '../composables/useInfiniteScroll'
 import { projects, getAllTags } from '../data/projects'
 import ProjectCard from '../components/ProjectCard.vue'
 import ProjectsPlaceholder from '../components/ProjectsPlaceholder.vue'
+import ThreeBackground from '../components/ThreeBackground.vue'
 
 const { profile } = useProfile()
 
-// Filtrer uniquement les vraies technologies (pas Interface admin, E-commerce, etc.)
+// Gérer les projets avec infinite scroll
+const allProjects = ref([...projects])
+const displayedProjects = ref([])
+const currentPage = ref(0)
+const projectsPerPage = 6 // Charger tous les projets d'un coup vu que vous en avez 3
+
+const loadMoreProjects = async () => {
+  // Simuler un délai de chargement
+  await new Promise(resolve => setTimeout(resolve, 800))
+  
+  const start = currentPage.value * projectsPerPage
+  const end = start + projectsPerPage
+  const newProjects = allProjects.value.slice(start, end)
+  
+  if (newProjects.length > 0) {
+    displayedProjects.value.push(...newProjects)
+    currentPage.value++
+    return true
+  }
+  
+  return false // Plus de projets
+}
+
+const { observerTarget, isLoading, hasMore } = useInfiniteScroll(
+  loadMoreProjects,
+  { threshold: 0.5, rootMargin: '200px' }
+)
+
+// Charger les premiers projets
+loadMoreProjects()
+
+// Filtrer uniquement les vraies technologies
 const realTechnologies = computed(() => {
   const allTags = getAllTags()
   const techKeywords = [
@@ -103,3 +158,20 @@ const realTechnologies = computed(() => {
   })
 })
 </script>
+
+<style scoped>
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project-card-enter {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+</style>

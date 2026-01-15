@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden" style="background: linear-gradient(135deg, #0B0F14 0%, #1a1625 100%);">
+    <!-- Background 3D -->
+    <ThreeBackground />
+    
     <!-- Gradient multi-couleurs -->
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none" 
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-0" 
          style="background: 
            radial-gradient(ellipse 600px 400px at 15% 15%, rgba(34, 211, 238, 0.12) 0%, transparent 50%),
            radial-gradient(ellipse 500px 400px at 85% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
@@ -65,6 +68,7 @@
 <script setup>
 import { useProfile } from '../composables/useProfile'
 import ProfileSelector from '../components/ProfileSelector.vue'
+import ThreeBackground from '../components/ThreeBackground.vue'
 
 const { setProfile } = useProfile()
 </script>
