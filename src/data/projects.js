@@ -2,6 +2,24 @@
 
 export const projects = [
   {
+    slug: 'nexuspay-defi-landing',
+    title: 'NexusPay — Modern DeFi Landing Page',
+    year: '2026',
+    tags: ['Vue.js', 'Tailwind CSS', 'Vite', 'Vercel', 'JavaScript', 'DeFi'],
+    context: `Création d'une plateforme de finance décentralisée (DeFi) haut de gamme axée sur la conversion et l'esthétique moderne.`,
+    problem: `Le besoin de simplifier l'accès aux outils DeFi complexes à travers une interface utilisateur intuitive, rapide et visuellement impactante pour instaurer la confiance.`,
+    solution: `Développement d'une Single Page Application (SPA) responsive utilisant une architecture modulaire. Implémentation d'un design "Bento Grid" et d'effets de glassmorphism pour une expérience utilisateur premium.`,
+    tech: `Vue.js 3 (Composition API) pour une logique réactive et performante. Tailwind CSS pour un stylisage "utility-first" ultra-précis. Vite pour un environnement de développement et un build ultra-rapide. Vercel pour le déploiement continu (CI/CD).`,
+    result: `Une landing page fluide et "Pixel-Perfect" avec des animations soignées, une structure de composants propre et une mise en ligne instantanée prouvant la viabilité technique du projet.`,
+    limits: `Intégration de graphiques de trading en temps réel (via API) et connexion aux portefeuilles Web3 (MetaMask/WalletConnect) pour la phase 2 du projet.`,
+    links: {
+      github: null,
+      demo: 'https://nexuspay-landing.vercel.app/',
+      case_study: null
+    }
+  },
+
+  {
     slug: 'kingdom-histoire-royaumes-africains',
     title: 'Royaume d-Afrique',
     year: '2026',
