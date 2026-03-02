@@ -192,7 +192,7 @@ const cursor = ref({ x: 0, y: 0 })
 const sections = [0, 1, 2, 3]
 
 const profiles = [
-  { id: 'recruiter', label: 'Recruteur', desc: 'Compétences & parcours' },
+  { id: 'recruiter', label: 'Recruteur', desc: 'Compétences & techno' },
   { id: 'client', label: 'Client', desc: 'Projets & collaboration' },
   { id: 'developer', label: 'Développeur', desc: 'Architecture & stack' },
   { id: 'curious', label: 'Explorer', desc: 'Découvrir le projet' }
