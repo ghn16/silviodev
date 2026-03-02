@@ -130,7 +130,7 @@
       <section class="content-section" :class="{ active: currentSection === 3 }">
         <div class="section-inner">
           <p class="eyebrow">Section 04 · Contact</p>
-          <h2 class="big-title">TRAVAIL<br>LONS</h2>
+          <h2 class="big-title" style="white-space:nowrap;font-size:clamp(1.2rem,5vw,4.5rem)">TRAVAILLONS</h2>
           <p class="contact-tagline">Vous avez un projet ? Parlons-en.</p>
 
           <div class="contact-links">

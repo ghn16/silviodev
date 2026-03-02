@@ -1,76 +1,65 @@
 <template>
-  <div class="min-h-screen text-zinc-200" style="background: linear-gradient(135deg, #0B0F14 0%, #1a1625 100%);">
+  <PageLayout>
     <DashboardHeader />
-    
-    <div class="max-w-5xl mx-auto px-6 py-16 relative">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 hero-gradient pointer-events-none"></div>
-      
-      <div class="relative z-10">
-        <h1 class="text-5xl md:text-6xl font-display font-light mb-6 text-zinc-50 fade-in leading-tight">
-          Le code est un <span style="
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-          ">outil</span>, pas une fin.
-        </h1>
-
-        <div class="prose prose-invert prose-zinc max-w-none mb-12 fade-in">
-          <p class="text-zinc-300 text-xl leading-relaxed mb-4">
-            Je m'intéresse davantage à la lisibilité, à la structure et à la cohérence 
-            qu'aux effets techniques inutiles.
-          </p>
-          <p class="text-zinc-400 text-lg leading-relaxed">
-            Un bon projet est celui qu'un autre développeur peut comprendre et maintenir.
-          </p>
-        </div>
-
-        <Section title="Principes">
-          <ul class="space-y-4 text-zinc-300 text-lg">
-            <li class="flex items-start group">
-              <span class="mr-4 text-indigo-400 group-hover:scale-110 transition-transform">—</span>
-              <span class="group-hover:text-zinc-100 transition-colors">Code lisible avant code complexe</span>
-            </li>
-            <li class="flex items-start group">
-              <span class="mr-4 text-indigo-400 group-hover:scale-110 transition-transform">—</span>
-              <span class="group-hover:text-zinc-100 transition-colors">Architecture explicite</span>
-            </li>
-            <li class="flex items-start group">
-              <span class="mr-4 text-indigo-400 group-hover:scale-110 transition-transform">—</span>
-              <span class="group-hover:text-zinc-100 transition-colors">Séparation claire des responsabilités</span>
-            </li>
-            <li class="flex items-start group">
-              <span class="mr-4 text-indigo-400 group-hover:scale-110 transition-transform">—</span>
-              <span class="group-hover:text-zinc-100 transition-colors">Choix techniques justifiés</span>
-            </li>
-          </ul>
-        </Section>
-
-        <Section title="Explorer mes projets">
-          <div class="space-y-4">
-            <router-link 
-              to="/projects"
-              class="btn-primary w-full justify-between group"
-            >
-              <div class="flex items-center gap-3">
-                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
-                <span class="font-medium">Projets sélectionnés</span>
-              </div>
-              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </router-link>
-          </div>
-        </Section>
+    <div class="page">
+      <div class="hero">
+        <p class="eyebrow">Profil · Développeur</p>
+        <h1 class="page-title">Le code est un <span class="grad-indigo">outil</span>, pas une fin.</h1>
+        <p class="page-sub">Je m'intéresse davantage à la lisibilité, à la structure et à la cohérence qu'aux effets techniques inutiles. Un bon projet est celui qu'un autre développeur peut comprendre et maintenir.</p>
       </div>
+
+      <section class="section">
+        <h2 class="section-label">Principes</h2>
+        <ul class="list">
+          <li v-for="p in principles" :key="p" class="list-item">
+            <span class="dash" style="color:#6366f1">—</span>
+            <span>{{ p }}</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section-label">Explorer mes projets</h2>
+        <router-link to="/projects" class="cta-full">
+          <div class="cta-full-left">
+            <svg class="ico" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+            </svg>
+            Projets sélectionnés
+          </div>
+          <svg class="ico" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+          </svg>
+        </router-link>
+      </section>
     </div>
-  </div>
+  </PageLayout>
 </template>
 
 <script setup>
+import PageLayout from '../components/PageLayout.vue'
 import DashboardHeader from '../components/DashboardHeader.vue'
-import Section from '../components/Section.vue'
-import { contactInfo as contact } from '../data/contact'
+const principles = ['Code lisible avant code complexe','Architecture explicite','Séparation claire des responsabilités','Choix techniques justifiés']
 </script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=DM+Sans:wght@200;300;400&display=swap');
+.page { max-width:860px;margin:0 auto;padding:80px 48px 120px;display:flex;flex-direction:column;gap:72px; }
+.hero { display:flex;flex-direction:column;gap:24px; }
+.eyebrow { font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,0.25); }
+.page-title { font-family:'Syncopate',sans-serif;font-size:clamp(2rem,4.5vw,4rem);font-weight:700;line-height:1.1;letter-spacing:-0.03em;color:#fff; }
+.grad-indigo { background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+.page-sub { font-family:'DM Sans',sans-serif;font-size:clamp(1rem,1.6vw,1.1rem);font-weight:300;line-height:1.85;color:rgba(255,255,255,0.4);max-width:580px; }
+.section { display:flex;flex-direction:column;gap:24px; }
+.section-label { font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,0.2); }
+.list { display:flex;flex-direction:column;gap:0;list-style:none;padding:0;margin:0; }
+.list-item { display:flex;align-items:flex-start;gap:20px;font-family:'DM Sans',sans-serif;font-size:clamp(0.95rem,1.4vw,1.05rem);font-weight:300;color:rgba(255,255,255,0.55);transition:color 0.2s;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.05); }
+.list-item:last-child { border-bottom:none; }
+.list-item:hover { color:rgba(255,255,255,0.9); }
+.dash { flex-shrink:0; }
+.cta-full { display:flex;align-items:center;justify-content:space-between;padding:24px 32px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);text-decoration:none;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;transition:all 0.3s;cursor:none; }
+.cta-full:hover { border-color:rgba(255,255,255,0.25);color:#fff;background:rgba(255,255,255,0.03); }
+.cta-full-left { display:flex;align-items:center;gap:14px; }
+.ico { width:16px;height:16px;flex-shrink:0; }
+@media(max-width:768px){ .page { padding:48px 24px 80px;gap:48px; } }
+</style>

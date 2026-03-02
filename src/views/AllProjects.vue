@@ -1,177 +1,130 @@
 <template>
-  <div class="min-h-screen text-zinc-200" style="background: linear-gradient(135deg, #0B0F14 0%, #1a1625 100%);">
-    <!-- Background 3D -->
-    <ThreeBackground />
+  <PageLayout back-link="/" back-label="Accueil">
+    <div class="projects-page">
+      <div class="page-eyebrow">Réalisations</div>
+      <h1 class="page-title">Projets <span class="grad-multi">sélectionnés.</span></h1>
+      <p class="page-intro">Une sélection volontairement réduite de projets représentatifs de ma manière de travailler.</p>
 
-    <!-- Header avec retour -->
-    <div class="bg-zinc-900 border-b border-zinc-700 px-6 py-4 relative z-10">
-      <div class="max-w-6xl mx-auto">
-        <router-link 
-          :to="profile ? `/dashboard/${profile}` : '/'"
-          class="text-zinc-400 hover:text-cyan-400 text-sm transition-all duration-300 flex items-center gap-2 w-fit hover:-translate-x-1"
+      <div class="divider"></div>
+
+      <!-- Grille projets -->
+      <div class="projects-list">
+        <div
+          v-for="(project, i) in displayedProjects"
+          :key="project.slug"
+          class="project-row"
+          @click="$router.push(`/projects/${project.slug}`)"
         >
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          <div class="project-index">{{ String(i+1).padStart(2,'0') }}</div>
+          <div class="project-info">
+            <h3 class="project-name">{{ project.title }}</h3>
+            <p class="project-context">{{ project.context.slice(0, 100) }}...</p>
+          </div>
+          <div class="project-meta">
+            <span class="project-year">{{ project.year }}</span>
+            <div class="project-tags">
+              <span v-for="tag in project.tags.slice(0,3)" :key="tag" class="tag">{{ tag }}</span>
+            </div>
+          </div>
+          <svg class="row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 17l9.2-9.2M17 17V7H7"/>
           </svg>
-          Retour
-        </router-link>
-      </div>
-    </div>
-
-    <div class="max-w-6xl mx-auto px-6 py-16 relative z-10">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 hero-gradient pointer-events-none"></div>
-      
-      <div class="relative z-10">
-        <!-- Titre -->
-        <div class="mb-12 fade-in">
-          <h1 class="text-5xl md:text-6xl font-display font-light mb-4 text-zinc-50 leading-tight">
-            Projets <span style="
-              background: linear-gradient(135deg, #22D3EE 0%, #A855F7 50%, #6366F1 100%);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              background-clip: text;
-            ">sélectionnés</span>
-          </h1>
-          <p class="text-zinc-400 text-lg">
-            Une sélection volontairement réduite de projets représentatifs de ma manière de travailler.
-          </p>
-        </div>
-
-        <!-- Grille de projets avec infinite scroll -->
-        <div v-if="displayedProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ProjectCard 
-            v-for="(project, index) in displayedProjects" 
-            :key="project.slug" 
-            :project="project"
-            :style="{ animationDelay: `${(index % 6) * 0.1}s` }"
-            class="project-card-enter"
-          />
-        </div>
-
-        <!-- Placeholder si pas de projets -->
-        <div v-else class="text-center py-16">
-          <ProjectsPlaceholder />
-        </div>
-
-        <!-- Observer target pour infinite scroll -->
-        <div v-if="hasMore" ref="observerTarget" class="py-12 flex justify-center">
-          <div v-if="isLoading" class="flex flex-col items-center gap-4">
-            <div class="w-12 h-12 border-4 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
-            <p class="text-zinc-400 text-sm">Chargement des projets...</p>
-          </div>
-        </div>
-
-        <!-- Message de fin -->
-        <div v-else-if="displayedProjects.length > 0" class="text-center py-12">
-          <p class="text-zinc-500 text-sm">Tous les projets ont été chargés</p>
-        </div>
-
-        <!-- Stats rapides -->
-        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="p-6 bg-zinc-900 border border-zinc-700 text-center hover:border-cyan-400/30 transition-all duration-300">
-            <div class="text-4xl font-bold text-cyan-400 mb-2">{{ projects.length }}</div>
-            <div class="text-zinc-400">Projets</div>
-          </div>
-          <div class="p-6 bg-zinc-900 border border-zinc-700 text-center hover:border-purple-400/30 transition-all duration-300">
-            <div class="text-4xl font-bold text-purple-400 mb-2">{{ realTechnologies.length }}</div>
-            <div class="text-zinc-400">Technologies</div>
-          </div>
-        </div>
-
-        <!-- Techno -->
-        <div class="mt-12 p-8 bg-zinc-900 border border-zinc-700">
-          <h2 class="text-2xl font-display font-light mb-6 text-zinc-200">Technologies utilisées</h2>
-          <div class="flex flex-wrap gap-3">
-            <span 
-              v-for="tech in realTechnologies" 
-              :key="tech"
-              class="px-4 py-2 bg-zinc-800 text-zinc-300 text-sm border border-zinc-700 
-                     hover:border-cyan-400 hover:text-cyan-400 hover:scale-105 
-                     transition-all duration-300 cursor-default"
-            >
-              {{ tech }}
-            </span>
-          </div>
         </div>
       </div>
+
+      <!-- Observer pour infinite scroll -->
+      <div v-if="hasMore" ref="observerTarget" class="load-more">
+        <div v-if="isLoading" class="loader">
+          <div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num grad-multi">{{ projects.length }}</div>
+          <div class="stat-label">Projets</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num grad-multi">{{ realTechnologies.length }}</div>
+          <div class="stat-label">Technologies</div>
+        </div>
+      </div>
+
+      <!-- Technologies -->
+      <section class="block">
+        <h2 class="block-title">Technologies utilisées</h2>
+        <div class="chips">
+          <span v-for="tech in realTechnologies" :key="tech" class="chip">{{ tech }}</span>
+        </div>
+      </section>
     </div>
-  </div>
+  </PageLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import PageLayout from '../components/PageLayout.vue'
 import { useProfile } from '../composables/useProfile'
 import { useInfiniteScroll } from '../composables/useInfiniteScroll'
 import { projects, getAllTags } from '../data/projects'
-import ProjectCard from '../components/ProjectCard.vue'
-import ProjectsPlaceholder from '../components/ProjectsPlaceholder.vue'
-import ThreeBackground from '../components/ThreeBackground.vue'
 
 const { profile } = useProfile()
-
-// Gérer les projets avec infinite scroll
 const allProjects = ref([...projects])
 const displayedProjects = ref([])
 const currentPage = ref(0)
-const projectsPerPage = 6 // Charger tous les projets d'un coup vu que vous en avez 3
+const projectsPerPage = 6
 
-const loadMoreProjects = async () => {
-  // Simuler un délai de chargement
-  await new Promise(resolve => setTimeout(resolve, 800))
-  
+const loadMore = async () => {
+  await new Promise(r => setTimeout(r, 600))
   const start = currentPage.value * projectsPerPage
-  const end = start + projectsPerPage
-  const newProjects = allProjects.value.slice(start, end)
-  
-  if (newProjects.length > 0) {
-    displayedProjects.value.push(...newProjects)
-    currentPage.value++
-    return true
-  }
-  
-  return false // Plus de projets
+  const newItems = allProjects.value.slice(start, start + projectsPerPage)
+  if (newItems.length > 0) { displayedProjects.value.push(...newItems); currentPage.value++; return true }
+  return false
 }
+const { observerTarget, isLoading, hasMore } = useInfiniteScroll(loadMore, { threshold: 0.5, rootMargin: '200px' })
+loadMore()
 
-const { observerTarget, isLoading, hasMore } = useInfiniteScroll(
-  loadMoreProjects,
-  { threshold: 0.5, rootMargin: '200px' }
-)
-
-// Charger les premiers projets
-loadMoreProjects()
-
-// Filtrer uniquement les vraies technologies
-const realTechnologies = computed(() => {
-  const allTags = getAllTags()
-  const techKeywords = [
-    'vue', 'nuxt', 'react', 'angular', 'javascript', 'typescript', 'node', 
-    'python', 'php', 'java', 'css', 'html', 'tailwind', 'bootstrap',
-    'supabase', 'firebase', 'mongodb', 'postgresql', 'mysql', 'redis',
-    'express', 'fastify', 'django', 'flask', 'laravel',
-    'git', 'docker', 'kubernetes', 'aws', 'vercel', 'netlify',
-    'responsive', 'design'
-  ]
-  
-  return allTags.filter(tag => {
-    const tagLower = tag.toLowerCase()
-    return techKeywords.some(keyword => tagLower.includes(keyword))
-  })
-})
+const techKeywords = ['vue','nuxt','react','javascript','typescript','node','python','php','css','html','tailwind','bootstrap','supabase','firebase','mongodb','postgresql','mysql','express','git','docker','aws','vercel','netlify','responsive','design']
+const realTechnologies = computed(() => getAllTags().filter(t => techKeywords.some(k => t.toLowerCase().includes(k))))
 </script>
 
 <style scoped>
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.project-card-enter {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap');
+.projects-page{max-width:900px}
+.page-eyebrow{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px}
+.page-title{font-family:'Syncopate',sans-serif;font-size:clamp(2rem,5vw,4rem);font-weight:700;line-height:1.05;letter-spacing:-.03em;margin-bottom:24px;color:#fff}
+.grad-multi{background:linear-gradient(135deg,#22d3ee,#a855f7,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-intro{font-size:clamp(1rem,1.5vw,1.1rem);color:rgba(255,255,255,.5);line-height:1.8;font-weight:300;max-width:600px}
+.divider{height:1px;background:rgba(255,255,255,.07);margin:48px 0}
+.block{margin-bottom:48px}
+.block-title{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px}
+.projects-list{display:flex;flex-direction:column}
+.project-row{display:grid;grid-template-columns:48px 1fr auto 24px;gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:none;transition:all .25s}
+.project-row:hover{background:rgba(255,255,255,.02);padding-left:12px;border-bottom-color:rgba(255,255,255,.15)}
+.project-index{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.2);font-family:'DM Sans',sans-serif}
+.project-name{font-size:16px;font-weight:400;color:rgba(255,255,255,.8);margin:0 0 6px;transition:color .2s;font-family:'DM Sans',sans-serif}
+.project-row:hover .project-name{color:#fff}
+.project-context{font-size:12px;color:rgba(255,255,255,.3);margin:0;line-height:1.5;font-weight:300}
+.project-meta{text-align:right}
+.project-year{display:block;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.25);margin-bottom:8px}
+.project-tags{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.08);padding:3px 8px}
+.row-arrow{width:16px;height:16px;color:rgba(255,255,255,.2);opacity:0;transition:opacity .2s,transform .2s;flex-shrink:0}
+.project-row:hover .row-arrow{opacity:.7;transform:translate(2px,-2px)}
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:48px}
+.stat-box{border:1px solid rgba(255,255,255,.07);padding:32px;text-align:center;background:rgba(255,255,255,.02)}
+.stat-num{font-family:'Syncopate',sans-serif;font-size:3rem;font-weight:700;display:block;margin-bottom:8px}
+.stat-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:7px 16px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);transition:all .2s;cursor:none}
+.chip:hover{border-color:#22d3ee;color:#22d3ee}
+.load-more{padding:40px 0;display:flex;justify-content:center}
+.loader{display:flex;gap:8px}
+.loader-dot{width:8px;height:8px;background:rgba(255,255,255,.3);border-radius:50%;animation:dotBounce 1.4s infinite ease-in-out both}
+.loader-dot:nth-child(1){animation-delay:-.32s}.loader-dot:nth-child(2){animation-delay:-.16s}
+@keyframes dotBounce{0%,80%,100%{transform:scale(0);opacity:.5}40%{transform:scale(1);opacity:1}}
+@media(max-width:768px){.project-row{grid-template-columns:36px 1fr 24px}.project-meta{display:none}}
 </style>
