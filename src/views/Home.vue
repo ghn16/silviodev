@@ -192,7 +192,7 @@ const cursor = ref({ x: 0, y: 0 })
 const sections = [0, 1, 2, 3]
 
 const profiles = [
-  { id: 'recruiter', label: 'Recruteur', desc: 'Compétences & stack' },
+  { id: 'recruiter', label: 'Recruteur', desc: 'Compétences & parcours' },
   { id: 'client', label: 'Client', desc: 'Projets & collaboration' },
   { id: 'developer', label: 'Développeur', desc: 'Architecture & stack' },
   { id: 'curious', label: 'Explorer', desc: 'Découvrir le projet' }
@@ -915,12 +915,53 @@ onBeforeUnmount(() => {
 }
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .content-section { padding: 0 24px; }
-  .side-nav { left: 16px; }
-  .section-label { left: 16px; bottom: 24px; }
-  .profile-grid { grid-template-columns: 1fr; }
-  .hero-layout { grid-template-columns: 1fr; }
-  .hero-right { display: none; }
+  .content-section { padding: 0 20px; }
+  .side-nav { left: 12px; gap: 16px; }
+  .side-nav .nav-step { height: 28px; }
+  .section-label { left: 16px; bottom: 20px; font-size: 9px; }
   .project-tags { display: none; }
+
+  /* Hero mobile : colonne unique, photo en haut */
+  .hero-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+    align-items: start;
+    padding-top: 16px;
+  }
+
+  /* Photo en premier (row 1) */
+  .hero-right {
+    order: -1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .photo-wrapper {
+    width: 140px;
+    height: 180px;
+  }
+
+  /* Nom + contenu en dessous */
+  .hero-left { order: 1; }
+
+  .mega-title {
+    font-size: clamp(1.6rem, 8vw, 2.4rem);
+    white-space: nowrap;
+  }
+
+  .subtitle {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    margin-bottom: 24px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .profile-btn { padding: 14px 16px; }
+  .profile-label { font-size: 12px; }
 }
 </style>
